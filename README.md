@@ -5,4 +5,4 @@
 <p>Page created to divulge the numbers of the new coronavirus in the city of Ceará-Mirim, located in northeastern Brazil. All data is extracted from daily newsletters from local public health statistics agency (SESAP).
 <br>
 <br>
-<a href="https://vitorarj.github.io/estatisticascovidcm/" target="_blank">Acesse a Página</a>	&#128279;
+<a href="https://vitorarj.github.io/estatisticascovidcm/" target="_blank">Acesse a Página</a>	&#8599;
