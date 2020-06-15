@@ -1,11 +1,5 @@
 <?php
-    include_once './conexao.php';
-    date_default_timezone_set('America/Recife');
-    $datalog = date('d/m/Y H:i:s');
-    $host = $_SERVER["REMOTE_ADDR"];
-    $sql = "INSERT INTO contador () VALUES (NULL, '$host', '$datalog')";
-			$statement = $conn->prepare($sql);
-            $statement->execute();
+    
  
 ?>
 <!DOCTYPE html>
