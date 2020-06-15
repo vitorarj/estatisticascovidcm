@@ -537,7 +537,7 @@
         <div class="row align-items-center justify-content-lg-between">
           <div class="col-lg-6">
             <div class="copyright text-center  text-lg-left  text-muted">
-              &copy; 2020 Esta página não pussui vínculo com a Prefeitura Municipal ou Secreteria de Saúde de Ceará-Mirim. Os dados aqui contidos são acesiveis a todos no site do<a href="http://www.saude.rn.gov.br/Conteudo.asp?TRAN=ITEM&TARG=223456&ACT=&PAGE=&PARM=&LBL=MAT%C9RIA" class="font-weight-bold ml-1" target="_blank">SESAP RN</a>.
+              &copy; 2020 Esta página não pussui vínculo com a Prefeitura Municipal ou Secreteria de Saúde de Ceará-Mirim. Os dados aqui contidos são acessíveis a todos no site do<a href="http://www.saude.rn.gov.br/Conteudo.asp?TRAN=ITEM&TARG=223456&ACT=&PAGE=&PARM=&LBL=MAT%C9RIA" class="font-weight-bold ml-1" target="_blank">SESAP RN</a>.
             </div>
           </div>
           <div class="col-lg-6">
