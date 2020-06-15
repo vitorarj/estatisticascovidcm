@@ -1,5 +1,16 @@
 <?php
-    
+    include_once './conexao.php';
+    date_default_timezone_set('America/Recife');
+    $datalog = date('d/m/Y H:i:s');
+    $host = $_SERVER["REMOTE_ADDR"];
+    $sql = "INSERT INTO contador () VALUES (NULL, '$host', '$datalog')";
+		$statement = $conn->prepare($sql);
+    $statement->execute();
+
+    $sql = "SELECT Max(id) from boletim_sesap";
+    $statement = $conn->prepare($sql);
+    $statement->execute();
+    $id_max = $statement->fetchColumn();
  
 ?>
 <!DOCTYPE html>
@@ -10,7 +21,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="Acompanhe os números do novo coronavírus em Ceará-Mirim.">
   <meta name="author" content="Creative Tim">
-  <title>Números do Covid-19 em Ceará-Mirim</title>
+  <title>Números do Coronavírus em Ceará-Mirim</title>
   <!-- Favicon -->
   <link rel="icon" href="" type="image/png">
   <!-- Fonts -->
@@ -28,33 +39,24 @@
   <!-- Main content -->
   <div class="main-content" id="panel">
     <!-- Topnav -->
-    <nav class="navbar navbar-top navbar-expand navbar-dark bg-primary border-bottom">
+    <nav class="navbar navbar-top navbar-expand navbar-dark bg-primary border-bottom" >
       <div class="container-fluid">
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <!-- Search form -->
           <form class="navbar-search navbar-search-light form-inline mr-sm-3" id="navbar-search-main">
-          <h1 style="color:white;">NÚMEROS DO NOVO CORONAVÍRUS EM CEARÁ-MIRIM</h1>
+          <h1 style="color:#212529;"><strong>CORONAVÍRUS</strong> <strong style="color:#da121a; font-weight: bold;">/</strong><strong style="color:#259e4b; font-weight: bold;">/</strong> CEARÁ-MIRIM</h1>
           </form>
           <!-- Navbar links -->
           <ul class="navbar-nav align-items-center  ml-md-auto ">
-            <li class="nav-item d-xl-none">
-              <!-- Sidenav toggler -->
-              <div class="pr-3 sidenav-toggler sidenav-toggler-dark" data-action="sidenav-pin" data-target="#sidenav-main">
-                <div class="sidenav-toggler-inner">
-                  <i class="sidenav-toggler-line"></i>
-                  <i class="sidenav-toggler-line"></i>
-                  <i class="sidenav-toggler-line"></i>
-                </div>
-              </div>
-            </li>
             <li class="nav-item d-sm-none">
-              <a class="nav-link" href="https://api.whatsapp.com/send?text= + Acompanhe a evolução nos números de casos do novo coronavírus aqui em Ceará-Mirim, acesse: https://covidcm.000webhostapp.com/" target="_blank">
-                <i class="ni ni-send"></i>
+            <h3 style="color:#212529;"><strong>CORONAVÍRUS</strong> <strong style="color:#da121a; font-weight: bold;">/</strong><strong style="color:#259e4b; font-weight: bold;">/</strong> CEARÁ-MIRIM</h1>
+
               </a>
             </li>
 
             
           </ul>
+
           <ul class="navbar-nav align-items-center  ml-auto ml-md-0 ">
             <li class="nav-item dropdown">
               <a class="nav-link pr-0" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -80,11 +82,24 @@
         <div class="header-body">
           <div class="row align-items-center py-4">
             <div class="col-lg-6 col-7">
-              <h5 style="color:white; font-style:italic;">Os números são oriundos dos boletins diários do SESAP. [Atualizado em 14/05/2020 às 17:30]</h5>
+              <h5 style="color:white; font-weight: normal;">Os números são oriundos dos boletins diários do SESAP. [Atualizado em <?php
+                                                //SQL para selecionar os registros de parceiros
+                                                $sql = "SELECT * FROM boletim_sesap WHERE id=$id_max";
+                                                
+                                                $result = $conn->prepare($sql);
+                                                $result->execute();
+                                                while ($fila = $result->fetch(PDO::FETCH_ASSOC)) {
+                                                 
+                                                  echo $fila['data'];
+                                            }
+                                                
+                                            ?>]</h5>
             </div>
             <div class="col-lg-6 col-5 text-right">
               <a href="http://www.saude.rn.gov.br/Conteudo.asp?TRAN=ITEM&TARG=223456&ACT=&PAGE=&PARM=&LBL=MAT%C9RIA" target="_blank" class="btn btn-sm btn-neutral">Boletins SESAP</a>
+
             </div>
+            
           </div>
           <!-- Card stats -->
           <div class="row">
@@ -95,7 +110,18 @@
                   <div class="row">
                     <div class="col">
                       <h5 class="card-title text-uppercase text-muted mb-0">Confirmados</h5>
-                      <span class="h1 font-weight-bold mb-0">16</span>
+                      <span class="h1 font-weight-bold mb-0"><?php
+                                                //SQL para selecionar os registros de parceiros
+                                                $sql = "SELECT * FROM boletim_sesap WHERE id=$id_max";
+                                                $confir = 0;
+                                                $result = $conn->prepare($sql);
+                                                $result->execute();
+                                                while ($fila = $result->fetch(PDO::FETCH_ASSOC)) {
+                                                  $confir = $fila['confirmados'];
+                                                  echo $fila['confirmados'];
+                                            }
+                                                
+                                            ?></span>
                     </div>
                     <div class="col-auto">
                       <div class="icon icon-shape bg-gradient-red text-white rounded-circle shadow">
@@ -104,10 +130,19 @@
                     </div>
                   </div>
                   <p class="mt-3 mb-0 text-sm">
-                    <span class="text-danger mr-2"><i class="fa fa-arrow-up"></i> 2</span>
+                    <span class="text-danger mr-2"><i class="fa fa-arrow-up"></i> 0</span>
                     <span class="text-nowrap">Casos a mais que o boletim anterior.</span>
                     <span class="text-nowrap">Incidência por 100k hab:</span>
-                    <span class="text-danger mr-2"> 21,9</span>
+                    <span class="text-danger mr-2"> <?php
+                                                //SQL para selecionar os registros de parceiros
+                                                $sql = "SELECT * FROM boletim_sesap WHERE id=$id_max";
+                                                $result = $conn->prepare($sql);
+                                                $result->execute();
+                                                while ($fila = $result->fetch(PDO::FETCH_ASSOC)) {
+                                                  echo $fila['taxa_confirmados'];
+                                            }
+                                                
+                                            ?></span>
                   </p>
                 </div>
               </div>
@@ -119,7 +154,18 @@
                   <div class="row">
                     <div class="col">
                       <h5 class="card-title text-uppercase text-muted mb-0">Suspeitos</h5>
-                      <span class="h1 font-weight-bold mb-0">75</span>
+                      <span class="h1 font-weight-bold mb-0"><?php
+                                                //SQL para selecionar os registros de parceiros
+                                                $sql = "SELECT * FROM boletim_sesap WHERE id=$id_max";
+                                                $suspeitos = 0;
+                                                $result = $conn->prepare($sql);
+                                                $result->execute();
+                                                while ($fila = $result->fetch(PDO::FETCH_ASSOC)) {
+                                                  $suspeitos = $fila['suspeitos'];
+                                                  echo $fila['suspeitos'];
+                                            }
+                                                
+                                            ?></span>
                     </div>
                     <div class="col-auto">
                       <div class="icon icon-shape bg-gradient-orange text-white rounded-circle shadow">
@@ -128,10 +174,19 @@
                     </div>
                   </div>
                   <p class="mt-3 mb-0 text-sm">
-                    <span class="text-danger mr-2"><i class="fa fa-arrow-up"></i> 3</span>
+                    <span class="text-danger mr-2"><i class="fa fa-arrow-up"></i> 0</span>
                     <span class="text-nowrap">Casos a mais que o boletim anterior.</span>
                     <span class="text-nowrap">Taxa de notificação por 100k hab:</span>
-                    <span class="text-danger mr-2">102,6</span>
+                    <span class="text-danger mr-2"><?php
+                                                //SQL para selecionar os registros de parceiros
+                                                $sql = "SELECT * FROM boletim_sesap WHERE id=$id_max";
+                                                $result = $conn->prepare($sql);
+                                                $result->execute();
+                                                while ($fila = $result->fetch(PDO::FETCH_ASSOC)) {
+                                                  echo $fila['taxa_suspeitos'];
+                                            }
+                                                
+                                            ?></span>
                     
                   </p>
                 </div>
@@ -144,7 +199,18 @@
                   <div class="row">
                     <div class="col">
                       <h5 class="card-title text-uppercase text-muted mb-0">Descartados</h5>
-                      <span class="h1 font-weight-bold mb-0">45</span>
+                      <span class="h1 font-weight-bold mb-0"><?php
+                                                //SQL para selecionar os registros de parceiros
+                                                $sql = "SELECT * FROM boletim_sesap WHERE id=$id_max";
+                                               
+                                                $result = $conn->prepare($sql);
+                                                $result->execute();
+                                                while ($fila = $result->fetch(PDO::FETCH_ASSOC)) {
+                                                
+                                                  echo $fila['descartados'];
+                                            }
+                                                
+                                            ?></span>
                     </div>
                     <div class="col-auto">
                       <div class="icon icon-shape bg-gradient-green text-white rounded-circle shadow">
@@ -152,7 +218,7 @@
                     </div>
                   </div>
                   <p class="mt-3 mb-0 text-sm">
-                    <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 3</span>
+                    <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 0</span>
                     <span class="text-nowrap">Casos a mais que o boletim anterior.</span>
                   </p>
                 </div>
@@ -165,7 +231,18 @@
                   <div class="row">
                     <div class="col">
                       <h5 class="card-title text-uppercase text-muted mb-0">Recuperados</h5>
-                      <span class="h1 font-weight-bold mb-0">9</span>
+                      <span class="h1 font-weight-bold mb-0"><?php
+                                                //SQL para selecionar os registros de parceiros
+                                                $sql = "SELECT * FROM boletim_sesap WHERE id=$id_max";
+                                                
+                                                $result = $conn->prepare($sql);
+                                                $result->execute();
+                                                while ($fila = $result->fetch(PDO::FETCH_ASSOC)) {
+                                                 
+                                                  echo $fila['recuperados'];
+                                            }
+                                                
+                                            ?></span>
                     </div>
                     <div class="col-auto">
                       <div class="icon icon-shape bg-gradient-info text-white rounded-circle shadow">
@@ -186,7 +263,18 @@
                   <div class="row">
                     <div class="col">
                       <h5 class="card-title text-uppercase text-muted mb-0">Óbitos</h5>
-                      <span class="h1 font-weight-bold mb-0">2</span>
+                      <span class="h1 font-weight-bold mb-0"><?php
+                                                //SQL para selecionar os registros de parceiros
+                                                $sql = "SELECT * FROM boletim_sesap WHERE id=$id_max";
+                                                $obitos = 0;
+                                                $result = $conn->prepare($sql);
+                                                $result->execute();
+                                                while ($fila = $result->fetch(PDO::FETCH_ASSOC)) {
+                                                  $obitos = $fila['obitos_confirmados'];
+                                                  echo $fila['obitos_confirmados'];
+                                            }
+                                                
+                                            ?></span>
                     </div>
                     <div class="col-auto">
                       <div class="icon icon-shape bg-gradient-dark text-white rounded-circle shadow">
@@ -197,7 +285,18 @@
                     <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 0</span>
                     <span class="text-nowrap">Casos a mais que o boletim anterior.</span>
                     <span class="text-nowrap">Mortalidade por 100.000 hab:</span>
-                    <span class="text-danger mr-2"> 2,7</span>
+                    <span class="text-danger mr-2"><?php
+                                                //SQL para selecionar os registros de parceiros
+                                                $sql = "SELECT * FROM boletim_sesap WHERE id=$id_max";
+                                                
+                                                $result = $conn->prepare($sql);
+                                                $result->execute();
+                                                while ($fila = $result->fetch(PDO::FETCH_ASSOC)) {
+                                                 
+                                                  echo $fila['mortalidade'];
+                                            }
+                                                
+                                            ?></span>
                   </p>
                 </div>
               </div>
@@ -209,7 +308,18 @@
                   <div class="row">
                     <div class="col">
                       <h5 class="card-title text-uppercase text-muted mb-0">Óbitos em Investigação</h5>
-                      <span class="h1 font-weight-bold mb-0">4</span>
+                      <span class="h1 font-weight-bold mb-0"><?php
+                                                //SQL para selecionar os registros de parceiros
+                                                $sql = "SELECT * FROM boletim_sesap WHERE id=$id_max";
+                                                
+                                                $result = $conn->prepare($sql);
+                                                $result->execute();
+                                                while ($fila = $result->fetch(PDO::FETCH_ASSOC)) {
+                                                 
+                                                  echo $fila['obitos_investigacao'];
+                                            }
+                                                
+                                            ?></span>
                     </div>
                     <div class="col-auto">
                       <div class="icon icon-shape bg-gradient-gray text-white rounded-circle shadow">
@@ -217,7 +327,7 @@
                     </div>
                   </div>
                   <p class="mt-3 mb-0 text-sm">
-                    <span class="text-danger mr-2"><i class="fa fa-arrow-up"></i> 2</span>
+                    <span class="text-danger mr-2"><i class="fa fa-arrow-up"></i> 0</span>
                     <span class="text-nowrap">Casos a mais que o boletim anterior.</span>
                     
                   </p>
@@ -373,122 +483,48 @@
                   </tr>
                 </thead>
                 <tbody>
+                <?php
+                                                //SQL para selecionar os registros de parceiros
+                                                $sql = "SELECT * FROM boletim_sesap ORDER BY  num_boletim DESC LIMIT 10";
+                                                
+                                                $result = $conn->prepare($sql);
+                                                $result->execute();
+                                                while ($fila = $result->fetch(PDO::FETCH_ASSOC)) {
+                                                 
+                                                  
+                                           
+                                                
+                                            ?>
                     <tr>
                     <th scope="row">
-                      #61
+                      #<?php echo $fila['num_boletim']; ?>
                     </th>
                     <td>
-                      75
+                    <?php echo $fila['suspeitos']; ?>
                     </td>
                     <td>
-                      16
+                    <?php echo $fila['confirmados']; ?>
                     </td>
                     <td>
-                      45
+                    <?php echo $fila['descartados']; ?>
                     </td>
                     <td>
-                      4
+                    <?php echo $fila['ignorados']; ?>
                     </td>
                     <td>
-                      1
+                    <?php echo $fila['obitos_investigacao']; ?>
                     </td>
                     <td>
-                      1
+                    <?php echo $fila['obitos_descartados']; ?>
                     </td>
                     <td>
-                      2
+                    <?php echo $fila['obitos_confirmados']; ?>
                     </td>
                     <td>
-                      9
+                    <?php echo $fila['recuperados']; ?>
                     </td>
                   </tr>
-                    <tr>
-                    <th scope="row">
-                      #60
-                    </th>
-                    <td>
-                      72
-                    </td>
-                    <td>
-                      14
-                    </td>
-                    <td>
-                      42
-                    </td>
-                    <td>
-                      2
-                    </td>
-                    <td>
-                      2
-                    </td>
-                    <td>
-                      1
-                    </td>
-                    <td>
-                      2
-                    </td>
-                    <td>
-                      9
-                    </td>
-                  </tr>
-                  <tr>
-                    <th scope="row">
-                      #59
-                    </th>
-                    <td>
-                      68
-                    </td>
-                    <td>
-                      12
-                    </td>
-                    <td>
-                      41
-                    </td>
-                    <td>
-                      2
-                    </td>
-                    <td>
-                      2
-                    </td>
-                    <td>
-                      1
-                    </td>
-                    <td>
-                      2
-                    </td>
-                    <td>
-                      9
-                    </td>
-                  </tr>
-                 <tr>
-                    <th scope="row">
-                      #58
-                    </th>
-                    <td>
-                      68
-                    </td>
-                    <td>
-                      13
-                    </td>
-                    <td>
-                      40
-                    </td>
-                    <td>
-                      -
-                    </td>
-                    <td>
-                      2
-                    </td>
-                    <td>
-                      1
-                    </td>
-                    <td>
-                      2
-                    </td>
-                    <td>
-                      9
-                    </td>
-                  </tr>
+                                          <?php } ?>    
                 </tbody>
               </table>
             </div>
@@ -522,6 +558,10 @@
     </div>
   </div>
   <!-- Argon Scripts -->
+
+  
+
+
   <!-- Core -->
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
   <script type="text/javascript">
@@ -554,10 +594,10 @@
         }
     },
       data: {
-          labels: ['01/02','15/02','01/03','15/03','01/04','15/04','01/04','14/05'],
+          labels: ['01/04','15/04','30/04','05/05','16/05','05/06','11/06','13/06'],
           datasets: [{
               label: "Casos Confirmados",
-              data: [0,0,0,0,1,5,12,16],
+              data: [1,5,12,14,23,94,155,182],
               borderWidth:3,
               borderColor: '#d92550',
               backgroundColor: 'transparent'
@@ -601,10 +641,10 @@
         }
     },
       data: {
-          labels: ['01/02','15/02','01/03','15/03','01/04','15/04','01/04','14/05'],
+          labels: ['01/04','15/04','30/04','05/05','16/05','05/06','11/06','13/06'],
           datasets: [{
               label: "Casos Suspeitos",
-              data: [0,0,0,1,21,36,48,75],
+              data: [21,36,46,54,85,215,248,248],
               borderWidth:3,
               borderColor: '#d92550',
               backgroundColor: 'transparent'
@@ -648,10 +688,10 @@
         }
     },
       data: {
-          labels: ['01/02','15/02','01/03','15/03','01/04','15/04','01/04','14/05'],
+          labels: ['01/04','15/04','30/04','05/05','16/05','05/06','11/06','13/06'],
           datasets: [{
              label: "Óbitos",
-              data: [0,0,0,0,0,0,2,2],
+              data: [0,0,2,2,2,13,15,15],
               borderWidth:3,
               borderColor: 'black',
               backgroundColor: 'transparent'
